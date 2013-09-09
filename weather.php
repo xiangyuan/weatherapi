@@ -19,12 +19,15 @@ final class WeatherParser {
 	 * @param unknown_type $long
 	 */
 	public final function requestLocationService($lan,$long) {
-		
-	} 
+		$url = $this->constructURL($lan . "," . $long);
+        $response = $this->request($url,2);
+        return $response;
+	}
 	
 	public function getWeather($address) {
-		$url = $this->constuctURL($address);
+		$url = $this->constructURL($address);
 		$response = $this->request($url);
+        return $response;
 	}
 	
 	/**
@@ -32,7 +35,7 @@ final class WeatherParser {
 	 * @param unknown_type $type
 	 * @return string
 	 */
-	private function constuctURL($param='',$type=1) {
+	private function constructURL($param='',$type=1) {
 	    $url = '';
 		if ($type == 1) {
 			$url = WeatherParser::LOCATION_URL.$param.WeatherParser::SENSOR;
@@ -41,8 +44,11 @@ final class WeatherParser {
 		}
 		return $url;
 	}
-	
-	private function request($url) {
+
+    /**
+     * @param $url
+     */
+    private function request($url) {
 		$curl = curl_init($url);
 		$options = array(CURLOPT_URL=>$url,
 				CURLOPT_RETURNTRANSFER=>1,
@@ -52,7 +58,7 @@ final class WeatherParser {
 		if(!$response) {
 			die('Error:'.curl_error($curl).'errorcode:'.curl_errno($curl));
 		}
-		print $response;
+        return $response;
 	}
 }
 ?>
